@@ -1,0 +1,42 @@
+{% load cms_tags sekizai_tags %}
+
+{% addtoblock "js" %}<script type="text/javascript" src="{{ STATIC_URL }}js/libs/underscore-1.3.1.min.js"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{{ STATIC_URL }}js/libs/json2.js"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{{ STATIC_URL }}js/libs/backbone-0.9.1.min.js"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script type="text/javascript" src="{{ STATIC_URL }}js/saq.js"></script>{% endaddtoblock %}
+{% addtoblock "js" %}
+<script type="text/javascript">
+    $(function () {
+        SAQ.formNav = new SAQ.FormView({
+            el: $('#saq-form-nav-{{ instance.pk }}')[0],
+            nextUrl: {% if request.current_page.get_next_sibling %}'{% page_url request.current_page.get_next_sibling %}'{% else %}'{% page_url "generic_end" %}'{% endif %},
+            endUrl: {% if not request.current_page.get_next_sibling.next_sibling %}'{% page_url "generic_end" %}'{% else %}null{% endif %},
+            submitUrl: '{% url cms_saq_submit %}'
+        });
+        //set width of progress bar
+        $('.bar').width('{{width}}');
+    });
+</script>
+{% endaddtoblock %}
+
+<div class="row">
+    <div id="saq-form-nav-{{ instance.pk }}" class="saq-form-nav span4 offset3">
+
+        <ul class="pager">
+          <li class="previous {% if not request.current_page.get_previous_sibling %}disabled{% endif %}">
+            <a class="saq-prev-button" href="{% page_url request.current_page.get_previous_sibling %}">&larr; Back</a>
+          </li>
+          <li class="next">
+            <a class="saq-next-button" href="#">Forward &rarr;</a>
+          </li>
+        </ul>
+
+        <span class="saq-ticker"></span>
+
+        {% if met_end_condition and instance.end_page %}
+        <a class="saq-end-button" href="#">{{ instance.end_page_label|default:"Analysis" }}</a>
+        {% endif %}
+        {% csrf_token %}
+    </div>
+</div>
+{# vim:set filetype=htmldjango: #}
