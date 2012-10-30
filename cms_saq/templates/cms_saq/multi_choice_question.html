@@ -17,20 +17,33 @@
         SAQ.questions.add(model);
     });
 </script>
+
 {% endaddtoblock %}
 
-<ul class="saq-question saq-question-multi" id="saq-question-multi-{{ question.slug }}">
-    <li class="saq-question-error"></li>
-    {% for answer in answers %}
-    <li class='saq-answer saq-answer-multi'>
-        <input type="checkbox" id="saq-answer-multi-{{ answer.pk }}" name="{{ question.slug }}" value="{{ answer.slug }}" {% if submission and answer.slug in submission.answer_list %}checked{% endif %}>
-        <label for="saq-answer-multi-{{ answer.pk }}">
-            <div class="saq-answer-title">{{ answer.title }}</div>
-            <div class="saq-answer-help-text">
-                {{ answer.help_text|markdown }}
-            </div>
-        </label>
-    </li>
-    {% endfor %}
-</ul>
+<form>
+    <div class="quiz span7 offset1">
+        <legend>{{question.title}}</legend>
+        <ul class="saq-question saq-question-multi" id="saq-question-multi-{{ question.slug }}">
+            <li class="saq-question-error"></li>
+            {% for answer in answers %}
+            <li class='saq-answer saq-answer-single'>
+                <div class="row">
+                    <div class="span1">
+                        <input type="checkbox" id="saq-answer-multi-{{ answer.slug }}" name="{{ question.slug }}" value="{{ answer.slug }}" {% if submission and answer.slug == submission.answer %}checked{% endif %}>
+                    </div>
+                    <div class="span4">
+                        <label class="control-label" for="saq-answer-multi-{{ answer.slug }}">
+                        <div class="saq-answer-title"><a><b>{{ answer.title }}</b></a></div>
+                        <div class="help-block saq-answer-help-text">
+                            {{ answer.help_text|markdown }}
+                        </div>
+                        </label>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% include 'cms_saq/next.html' %}
+</form>
 {# vim: set filetype=htmldjango: #}

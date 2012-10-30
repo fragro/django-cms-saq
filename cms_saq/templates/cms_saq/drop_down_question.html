@@ -18,32 +18,40 @@
     });
 </script>
 {% endaddtoblock %}
+<form>
 
-<div>
-{% if question.label %}
-<div>
-    <label class="saq-question-label" for="saq-question-drop-{{ question.slug }}">{{ question.label }}</label>
-    <span class="saq-question-help-text">{{ question.help_text }}</span>
-</div>
-{% endif %}
-<div id="saq-question-drop-{{ question.slug }}">
-<div class="saq-question-error"></div>
-<select class="saq-question saq-question-drop">
-    <option value="">---</option>
-    {% if grouped_answers %}
-        {% for label, group in grouped_answers %}
-            <optgroup label="{{ label }}">
-                {% for answer in group %}
-                    <option value="{{ answer.slug }}" {% if submission and answer.slug == submission.answer %}selected{% endif %}>{{ answer.title }}</option>
-                {% endfor %}
-            </optgroup>
-        {% endfor %}
-    {% else %}
-        {% for answer in answers %}
-            <option value="{{ answer.slug }}" {% if submission and answer.slug == submission.answer %}selected{% endif %}>{{ answer.title }}</option>
-        {% endfor %}
-    {% endif %}
-</select>
-</div>
-</div>
+    <div class="quiz span7 offset1">
+        <legend>{{question.title}}</legend>
+        {% if question.help_text %}
+        <div>
+            <span class="muted saq-question-help-text">{{ question.help_text }}</span>
+        </div>
+        {% endif %}
+        <div id="saq-question-drop-{{ question.slug }}">
+            <div class="saq-question-error alert alert-error"></div>
+            <div class="row">
+                <div class="span4">
+                    <select class="span4 saq-question saq-question-drop">
+                        <option value="">---</option>
+                        {% if grouped_answers %}
+                            {% for label, group in grouped_answers %}
+                                <optgroup label="{{ label }}">
+                                    {% for answer in group %}
+                                        <option value="{{ answer.slug }}" {% if submission and answer.slug == submission.answer %}selected{% endif %}>{{ answer.title }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        {% else %}
+                            {% for answer in answers %}
+                                <option value="{{ answer.slug }}" {% if submission and answer.slug == submission.answer %}selected{% endif %}>{{ answer.title }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'cms_saq/next.html' %}
+
+</form>
 {# vim: set filetype=htmldjango: #}

@@ -15,6 +15,7 @@ $(function () {
         postValidate: function (attrs) {
             var value = attrs['value'];
             var optional = attrs['optional'] || false;
+            console.log(value);
             if (!optional && (value === undefined || value === null || value === "")) {
                 return "Please submit an answer to this question.";
             }
@@ -72,7 +73,7 @@ $(function () {
 
     SAQ.FreeTextQuestionView = SAQ.QuestionView.extend({
         changeValue: function () {
-            this.model.set('value', this.$('input').val());
+            this.model.set('value', this.$('textarea').val());
         }
     });
 
@@ -81,6 +82,7 @@ $(function () {
         validate: function () {
             var passed = true;
             this.forEach(function (question) {
+                console.log(question.attributes);
                 var msg = question.postValidate(question.attributes);
                 if (msg) {
                     question.trigger('error', question, msg);
@@ -119,17 +121,32 @@ $(function () {
                 this.submitting = true;
                 this.$('.saq-ticker').css('visibility', 'visible');
                 SAQ.trigger('submit:start');
+                console.log();
                 $.ajax({
                     url: this.options.submitUrl,
                     data: SAQ.questions.asMap(),
                     type: 'POST',
-                    error: function () { self.onSubmitError(); },
-                    success: function () {
-                        if (andEnd) {
-                            self.onSubmitSuccessEnd();
-                        } else {
-                            self.onSubmitSuccess();
+                    error: function (data) { console.log(data); self.onSubmitError(); },
+                    success: function (data) {
+                        console.log(data);
+                        if(data.complete === true){
+                            if (andEnd) {
+                                self.onSubmitSuccessEnd();
+                            } else {
+                                self.onSubmitSuccess();
+                            }
                         }
+                        else{
+                            if(data.error){
+                              $('#error').html(data.error);
+                            }
+                            //insert help text
+                            if(data.help_text){
+                              $('#help_info').show();
+                              $('#help_info').html(data.help_text);
+                            }
+                        }
+                        
                     },
                     complete: function () { self.onSubmitComplete(); }
                 });
