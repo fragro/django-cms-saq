@@ -39,7 +39,7 @@ class QuizPlugin(CMSPluginBase):
 
     def save_model(self, request, obj, form, change):
         obj.page_hook = request.current_page
-        super(QuizPlugin, self).save_model(request, obj, form, change)
+        obj.save()
 
 
 class NoHelpTextAnswerAdmin(AnswerAdmin):
@@ -80,7 +80,7 @@ class QuestionPlugin(CMSPluginBase):
             p = request.current_page.parent
             q = Quiz.objects.get(page_hook=p)
             obj.quiz_slug = q
-        super(QuestionPlugin, self).save_model(request, obj, form, change)
+        obj.save()
 
 
 class SingleChoiceQuestionPlugin(QuestionPlugin):

@@ -64,7 +64,7 @@ class Quiz(CMSPlugin):
 
 
 class HelpText(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     created_dt = models.DateTimeField(auto_now=True)
     slug = AutoSlugField(populate_from='title')
     help_text = models.TextField(blank=True, null=True)
@@ -75,7 +75,7 @@ class HelpText(models.Model):
 
 
 class Answer(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from='title')
     help_text = models.TextField(blank=True, null=True)
     score = models.IntegerField(default=0)
