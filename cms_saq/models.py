@@ -10,7 +10,7 @@ from django.contrib import admin
 
 
 class Quiz(CMSPlugin):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from='title')
     group = models.ForeignKey(Group, related_name="quizzes")
     created_dt = models.DateTimeField(auto_now=True)
